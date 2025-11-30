@@ -1,4 +1,4 @@
-﻿name: CI/CD DevOps Pipeline
+name: CI/CD DevOps Pipeline
 
 on:
   push:
@@ -13,20 +13,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ============================
+      # 1. Descarga el código
+      # ============================
       - name: Checkout código
         uses: actions/checkout@v4
 
+      # ============================
+      # 2. Configurar Node.js
+      # ============================
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # ============================
+      # 3. Instalar dependencias
+      # ============================
       - name: Instalar dependencias
         run: npm ci
 
+      # ============================
+      # 4. Ejecutar pruebas
+      # ============================
       - name: Ejecutar pruebas unitarias
         run: npm test
 
+      # ============================
+      # 5. Login en Docker Hub
+      # ============================
       - name: Login en Docker Hub
         if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
@@ -34,16 +49,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # ============================
+      # 6. Build + Push Docker
+      # ============================
       - name: Build & Push imagen Docker
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile       # <---- 🔥 CORRECCIÓN CRÍTICA
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-pipeline:latest
 
-
+      # ============================
+      # 7. Deploy automático en Render (webhook)
+      # ============================
       - name: Desplegar en Render (deploy hook)
         if: github.ref == 'refs/heads/main'
         run: |
