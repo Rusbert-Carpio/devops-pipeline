@@ -1,14 +1,7 @@
-﻿FROM node:20-alpine
+﻿FROM nginx:stable-alpine
 
-WORKDIR /app
+COPY public /usr/share/nginx/html
 
-COPY package*.json ./
+EXPOSE 80
 
-RUN npm ci --omit=dev
-
-COPY . .
-
-ENV PORT=3000
-EXPOSE 3000
-
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]
