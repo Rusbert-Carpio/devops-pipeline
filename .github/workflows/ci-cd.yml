@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
@@ -28,19 +28,21 @@ jobs:
         run: npm test
 
       - name: Login en Docker Hub
+        if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build & Push imagen Docker
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-pipeline:latest
+          tags: rusbert03/devops-pipeline:latest
 
       - name: Desplegar en Render (deploy hook)
+        if: github.ref == 'refs/heads/main'
         run: |
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
