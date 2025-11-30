@@ -39,8 +39,10 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-pipeline:latest
+
 
       - name: Desplegar en Render (deploy hook)
         if: github.ref == 'refs/heads/main'
