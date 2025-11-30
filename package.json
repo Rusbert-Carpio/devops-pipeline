@@ -1,0 +1,22 @@
+{
+  "name": "devops-pipeline",
+  "version": "1.0.0",
+  "description": "Proyecto Final DevOps Pipeline - Rusbert Carpio 2023-0682",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest"
+  },
+  "author": "Rusbert Carpio",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
